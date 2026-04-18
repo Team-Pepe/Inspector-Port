@@ -1,20 +1,23 @@
 import { Router, Route } from "@solidjs/router";
+import { Suspense, lazy } from "solid-js";
 import Sidebar from "./components/common/Sidebar";
 import Header from "./components/common/Header";
-import Dashboard from "./views/Dashboard/Dashboard";
-import Network from "./views/Network/Network";
-import Resources from "./views/Resources/Resources";
-import AIAssistant from "./views/AIAssistant/AIAssistant";
-import Settings from "./views/Settings/Settings";
 
-function AppLayout() {
+const Dashboard = lazy(() => import("./views/Dashboard/Dashboard"));
+const Network = lazy(() => import("./views/Network/Network"));
+const AIAssistant = lazy(() => import("./views/AIAssistant/AIAssistant"));
+const Settings = lazy(() => import("./views/Settings/Settings"));
+
+function Layout(props: any) {
   return (
     <div class="flex h-screen overflow-hidden bg-background text-on-background">
       <Sidebar />
       <main class="flex-1 flex flex-col overflow-hidden">
         <Header title="System Health" subtitle="Network / Active Ports" />
         <div class="flex-1 overflow-y-auto p-6 space-y-6">
-          {/* Content will be rendered here by routes */}
+          <Suspense fallback={<div class="text-secondary text-center py-12">Loading...</div>}>
+            {props.children}
+          </Suspense>
         </div>
       </main>
     </div>
@@ -23,7 +26,7 @@ function AppLayout() {
 
 export default function App() {
   return (
-    <Router root={AppLayout}>
+    <Router root={Layout}>
       <Route path="/" component={Dashboard} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/ports" component={Network} />
