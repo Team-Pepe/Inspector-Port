@@ -1,51 +1,35 @@
-import { createSignal } from "solid-js";
-import logo from "./assets/logo.svg";
-import { invoke } from "@tauri-apps/api/core";
-import "./App.css";
+import { Router, Route } from "@solidjs/router";
+import Sidebar from "./components/common/Sidebar";
+import Header from "./components/common/Header";
+import Dashboard from "./views/Dashboard/Dashboard";
+import Network from "./views/Network/Network";
+import Resources from "./views/Resources/Resources";
+import AIAssistant from "./views/AIAssistant/AIAssistant";
+import Settings from "./views/Settings/Settings";
 
-function App() {
-  const [greetMsg, setGreetMsg] = createSignal("");
-  const [name, setName] = createSignal("");
-
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    setGreetMsg(await invoke("greet", { name: name() }));
-  }
-
+function AppLayout() {
   return (
-    <main class="container">
-      <h1>Welcome to Tauri + Solid</h1>
-
-      <div class="row">
-        <a href="https://vite.dev" target="_blank">
-          <img src="/vite.svg" class="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" class="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://solidjs.com" target="_blank">
-          <img src={logo} class="logo solid" alt="Solid logo" />
-        </a>
-      </div>
-      <p>Click on the Tauri, Vite, and Solid logos to learn more.</p>
-
-      <form
-        class="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg()}</p>
-    </main>
+    <div class="flex h-screen overflow-hidden bg-background text-on-background">
+      <Sidebar />
+      <main class="flex-1 flex flex-col overflow-hidden">
+        <Header title="System Health" subtitle="Network / Active Ports" />
+        <div class="flex-1 overflow-y-auto p-6 space-y-6">
+          {/* Content will be rendered here by routes */}
+        </div>
+      </main>
+    </div>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <Router root={AppLayout}>
+      <Route path="/" component={Dashboard} />
+      <Route path="/dashboard" component={Dashboard} />
+      <Route path="/network" component={Network} />
+      <Route path="/resources" component={Resources} />
+      <Route path="/ai-assistant" component={AIAssistant} />
+      <Route path="/settings" component={Settings} />
+    </Router>
+  );
+}
