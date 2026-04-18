@@ -26,8 +26,7 @@ export default function App() {
     <Router root={AppLayout}>
       <Route path="/" component={Dashboard} />
       <Route path="/dashboard" component={Dashboard} />
-      <Route path="/network" component={Network} />
-      <Route path="/resources" component={Resources} />
+      <Route path="/ports" component={Network} />
       <Route path="/ai-assistant" component={AIAssistant} />
       <Route path="/settings" component={Settings} />
     </Router>
